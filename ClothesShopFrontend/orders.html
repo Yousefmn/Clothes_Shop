@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders - ClothesShop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>ClothesShop Orders</h1>
+        <nav>
+            <a href="index.html">Dashboard</a>
+            <a href="products.html">Products</a>
+            <a href="orders.html">Orders</a>
+            <a href="login.html">Logout</a>
+        </nav>
+    </header>
+    <main>
+        <h2>Manage Customer Orders</h2>
+        <p>Here you can view, edit, or update all customer orders efficiently.</p>
+
+        <div class="orders-filters">
+            <input type="text" placeholder="Search by Customer or Order ID..." id="searchInput">
+            <select id="statusFilter">
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="shipped">Shipped</option>
+                <option value="delivered">Delivered</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+            <button id="searchBtn">Search</button>
+        </div>
+
+        <div class="orders-table" id="ordersContainer">
+            <div class="orders-header">
+                <span>Order ID</span>
+                <span>Customer</span>
+                <span>Products</span>
+                <span>Qty</span>
+                <span>Total Price</span>
+                <span>Date</span>
+                <span>Status</span>
+                <span>Actions</span>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const ordersContainer = document.getElementById('ordersContainer');
+        const searchInput = document.getElementById('searchInput');
+        const statusFilter = document.getElementById('statusFilter');
+        const searchBtn = document.getElementById('searchBtn');
+
+        async function loadOrders() {
+            try {
+                const orders = [
+                    { OrderID: 101, CustomerName: "Alice", Products: [{ ProductName: "Shirt", Quantity: 2 }], TotalAmount: 45.50, OrderDate: "2025-12-01", Status: "Pending" },
+                    { OrderID: 102, CustomerName: "Bob", Products: [{ ProductName: "Jeans", Quantity: 1 }], TotalAmount: 60.00, OrderDate: "2025-12-02", Status: "Shipped" },
+                    { OrderID: 103, CustomerName: "Charlie", Products: [{ ProductName: "Jacket", Quantity: 1 }], TotalAmount: 120.00, OrderDate: "2025-12-03", Status: "Delivered" },
+                    { OrderID: 104, CustomerName: "Diana", Products: [{ ProductName: "T-shirt", Quantity: 3 }], TotalAmount: 75.00, OrderDate: "2025-12-04", Status: "Cancelled" },
+                    { OrderID: 105, CustomerName: "Eve", Products: [{ ProductName: "Skirt", Quantity: 2 }], TotalAmount: 80.00, OrderDate: "2025-12-05", Status: "Pending" },
+                    { OrderID: 106, CustomerName: "Frank", Products: [{ ProductName: "Shoes", Quantity: 1 }], TotalAmount: 95.00, OrderDate: "2025-12-06", Status: "Shipped" },
+                    { OrderID: 107, CustomerName: "Grace", Products: [{ ProductName: "Hat", Quantity: 1 }], TotalAmount: 25.00, OrderDate: "2025-12-07", Status: "Delivered" }
+                ];
+
+                ordersContainer.innerHTML = `
+                    <div class="orders-header">
+                        <span>Order ID</span>
+                        <span>Customer</span>
+                        <span>Products</span>
+                        <span>Qty</span>
+                        <span>Total Price</span>
+                        <span>Date</span>
+                        <span>Status</span>
+                        <span>Actions</span>
+                    </div>
+                `;
+
+                orders.forEach(order => {
+                    const productsText = order.Products.map(p => p.ProductName).join(', ');
+                    const qtyText = order.Products.map(p => p.Quantity).reduce((a,b)=>a+b,0);
+
+                    const row = document.createElement('div');
+                    row.className = 'order-row';
+                    row.innerHTML = `
+                        <span>${order.OrderID}</span>
+                        <span>${order.CustomerName}</span>
+                        <span>${productsText}</span>
+                        <span>${qtyText}</span>
+                        <span>$${order.TotalAmount.toFixed(2)}</span>
+                        <span>${order.OrderDate}</span>
+                        <span class="status ${order.Status.toLowerCase()}">${order.Status}</span>
+                        <span class="actions">
+                            <button class="edit-btn" onclick="editOrder(${order.OrderID})">Edit</button>
+                            <button class="delete-btn" onclick="deleteOrder(${order.OrderID})">Delete</button>
+                        </span>
+                    `;
+                    ordersContainer.appendChild(row);
+                });
+
+            } catch (err) {
+                console.error('Error fetching orders:', err);
+            }
+        }
+
+        loadOrders(); 
+
+        searchBtn.addEventListener('click', () => {
+            const searchValue = searchInput.value.toLowerCase();
+            const statusValue = statusFilter.value.toLowerCase();
+
+            const rows = document.querySelectorAll('.order-row');
+            rows.forEach(row => {
+                const customerName = row.children[1].textContent.toLowerCase();
+                const orderID = row.children[0].textContent.toLowerCase();
+                const status = row.children[6].textContent.toLowerCase();
+
+                if (
+                    (customerName.includes(searchValue) || orderID.includes(searchValue)) &&
+                    (statusValue === "" || status === statusValue)
+                ) {
+                    row.style.display = 'grid';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+
+        function editOrder(orderID) {
+            alert('Edit order ' + orderID);
+        }
+
+        function deleteOrder(orderID) {
+            if(confirm(`Are you sure you want to delete order ${orderID}?`)){
+                alert(`Order ${orderID} deleted (mock)`); 
+                loadOrders(); 
+            }
+        }
+    </script>
+</body>
+</html>

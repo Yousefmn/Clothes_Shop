@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leagues - ClothesShop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    
+    <header>
+        <h1>Leagues</h1>
+        <nav>
+            <a href="index.html">Dashboard</a>
+            <a href="products.html">Products</a>
+            <a href="orders.html">Orders</a>
+            <a href="login.html">Logout</a>
+        </nav>
+    </header>
+
+    
+    <main class="grid-container" id="leagues-container">
+        
+    </main>
+
+    
+    <script>
+document.addEventListener("DOMContentLoaded", async () => {
+    const container = document.querySelector(".grid-container");
+    if (!container) return;
+
+    try {
+        const response = await fetch("http://192.168.1.30:5000/products");
+        const products = await response.json();
+
+        container.innerHTML = "";
+
+        products.forEach(product => {
+            
+            const imgNumber = ((product.ProductID - 1) % 8) + 1;
+            const imgSrc = `img/leagues${imgNumber}.jpeg`;
+
+            const card = document.createElement("div");
+            card.classList.add("product-card");
+
+            card.innerHTML = `
+                <img src="${imgSrc}" alt="${product.ProductName}">
+                <div class="product-info">
+                    <p>$${product.Price}</p>
+                    <button class="add-btn" data-id="${product.ProductID}" data-price="${product.Price}">Add</button>
+                </div>
+                <h3>${product.ProductName}</h3>
+            `;
+
+            container.appendChild(card);
+        });
+
+       
+        const addButtons = document.querySelectorAll('.add-btn');
+        addButtons.forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const productId = btn.getAttribute('data-id');
+                const price = parseFloat(btn.getAttribute('data-price'));
+
+                const orderData = {
+                    CustomerID: 1,
+                    ProductID: productId,
+                    Quantity: 1,
+                    Price: price
+                };
+
+                try {
+                    const res = await fetch('http://192.168.1.30:5000/orders', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(orderData)
+                    });
+                    const data = await res.json();
+                    if(data.OrderID){
+                        alert('Order added! OrderID: ' + data.OrderID);
+                        
+                        window.location.href = 'orders.html';
+                    } else {
+                        alert('Failed to add order!');
+                    }
+                } catch(err){
+                    console.error(err);
+                    alert('Error adding order!');
+                }
+            });
+        });
+
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        alert("Can't load products from backend.");
+    }
+});
+</script>
+ <main class="grid-container">
+        <div class="product-card" data-productid="1" data-price="30">
+            <img src="img/Champions League.jpeg" alt="Champions League">
+            <div class="product-info">
+                <p>$300</p>
+                <button class="add-btn">Add</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-productid="2" data-price="30">
+            <img src="img/Super Cup.jpeg" alt="UEFA Super Cup">
+            <div class="product-info">
+                <p>$150</p>
+                <button class="add-btn">Add</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-productid="3" data-price="30">
+            <img src="img/leagues6.jpeg" alt="laleg">
+            <div class="product-info">
+                <p>$200</p>
+                <button class="add-btn">Add</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-productid="4" data-price="30">
+            <img src="img/balon dor.jpg " alt="balon dor">
+            <div class="product-info">
+                <p>$500</p>
+                <button class="add-btn">Add</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-productid="5" data-price="30">
+            <img src="img/the best.jpg" alt="the best">
+            <div class="product-info">
+                <p>$250</p>
+                <button class="add-btn">Add</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-productid="6" data-price="30">
+            <img src="img/golden bot.jpg" alt="golden bot">
+            <div class="product-info">
+                <p>$30</p>
+                <button class="add-btn">Add</button>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

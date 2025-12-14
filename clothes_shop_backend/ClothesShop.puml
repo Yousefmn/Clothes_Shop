@@ -1,0 +1,29 @@
+@startuml
+class Supplier {
+}
+class Category {
+}
+class Customer {
+}
+class Product {
+}
+class Order {
+}
+class OrderDetail {
+}
+class Employee {
+}
+class Inventory {
+}
+class Payment {
+}
+class Shipper {
+}
+Order --> OrderDetail
+OrderDetail --> Product
+Order --> Customer
+Product --> Category
+Product --> Supplier
+Inventory --> Product
+Payment --> Order
+@enduml

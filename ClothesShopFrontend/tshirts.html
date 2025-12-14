@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>T-Shirts - ClothesShop</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>T-Shirts</h1>
+        <nav>
+            <a href="index.html">Dashboard</a>
+            <a href="products.html">Products</a>
+            <a href="orders.html">Orders</a>
+            <a href="login.html">Logout</a>
+        </nav>
+    </header>
+
+    <main class="grid-container">
+        <div class="product-card" data-productid="1" data-price="30">
+            <img src="C:\Users\moyou\Desktop\ClothesShopFrontend\img/2009.webp" alt="T-Shirt 1">
+            <div class="product-info">
+                <p>$30</p>
+                <button class="add-btn">Add</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-productid="2" data-price="30">
+            <img src="C:\Users\moyou\Desktop\ClothesShopFrontend\img/2015.jpg" alt="T-Shirt 2">
+            <div class="product-info">
+                <p>$30</p>
+                <button class="add-btn">Add</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-productid="3" data-price="30">
+            <img src="C:\Users\moyou\Desktop\ClothesShopFrontend\img/city.webp" alt="T-Shirt 3">
+            <div class="product-info">
+                <p>$30</p>
+                <button class="add-btn">Add</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-productid="4" data-price="30">
+            <img src="C:\Users\moyou\Desktop\ClothesShopFrontend\img/alahly.jpg" alt="T-Shirt 4">
+            <div class="product-info">
+                <p>$30</p>
+                <button class="add-btn">Add</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-productid="5" data-price="30">
+            <img src="C:\Users\moyou\Desktop\ClothesShopFrontend\img/liver pool 2.jpg" alt="T-Shirt 5">
+            <div class="product-info">
+                <p>$30</p>
+                <button class="add-btn">Add</button>
+            </div>
+        </div>
+
+        <div class="product-card" data-productid="6" data-price="30">
+            <img src="C:\Users\moyou\Desktop\ClothesShopFrontend\img/inter.webp" alt="T-Shirt 6">
+            <div class="product-info">
+                <p>$30</p>
+                <button class="add-btn">Add</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        
+        const addButtons = document.querySelectorAll('.add-btn');
+
+        addButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const card = btn.closest('.product-card');
+                const productId = card.getAttribute('data-productid');
+                const price = parseFloat(card.getAttribute('data-price'));
+
+                
+                const orderData = {
+                    CustomerID: 1,
+                    ProductID: productId,
+                    Quantity: 1,
+                    Price: price
+                };
+
+                fetch('http://192.168.1.30:5000/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.OrderID){
+                        alert('Order added! OrderID: ' + data.OrderID);
+                        
+                        window.location.href = 'orders.html';
+                    } else {
+                        alert('Failed to add order!');
+                    }
+                })
+                .catch(err => console.error(err));
+            });
+        });
+    </script>
+</body>
+</html>

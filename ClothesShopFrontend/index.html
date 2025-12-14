@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ClothesShop - Barcelona Official</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>ClothesShop Dashboard</h1>
+        <nav>
+            <a href="products.html">Products</a>
+            <a href="orders.html">Orders</a>
+            <a href="login.html">Logout</a>
+        </nav>
+    </header>
+
+    <main>
+            <div class="hero-title">
+    <h1>TAGLINE STORE</h1>
+</div>
+
+        <section class="club-info">
+            <h2>Welcome to TAGLINE STORE</h2>
+            <p>
+                "Welcome to the place where style meets excitement! Here, you’re not just buying a T-shirt — you’re unlocking a chance to win exclusive copy rewards with every order. Explore our trendy designs, pick your perfect fit, and enjoy quality that feels as good as it looks. Every purchase enters you into our prize draw, so your next click might just be the one that wins. Shop your style, enjoy the experience, and let the rewards chase you!
+            </p>
+        </section>
+
+       
+        <section class="special-offers">
+            <h2>Special Offers & Discounts</h2>
+            
+
+            <div class="grid-container">
+
+                <div class="product-card">
+                    <img src="C:\Users\moyou\Desktop\ClothesShopFrontend\img/2009.webp" alt="T-Shirt 1">
+                    <div class="product-info">
+                        <p>$30</p>
+                        <button class="add-btn" data-id="1" data-price="30">Add</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="C:\Users\moyou\Desktop\ClothesShopFrontend\img/tshirts2.jpeg" alt="T-Shirt 2">
+                    <div class="product-info">
+                        <p>$35</p>
+                        <button class="add-btn" data-id="2" data-price="35">Add</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="C:\Users\moyou\Desktop\ClothesShopFrontend\img/inter.webp" alt="League 1">
+                    <div class="product-info">
+                        <p>$50</p>
+                        <button class="add-btn" data-id="3" data-price="50">Add</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="C:\Users\moyou\Desktop\ClothesShopFrontend\img/leagues2.jpeg" alt="League 2">
+                    <div class="product-info">
+                        <p>$55</p>
+                        <button class="add-btn" data-id="4" data-price="55">Add</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="C:\Users\moyou\Desktop\ClothesShopFrontend\img/balon dor.jpg " alt="T-Shirt 3">
+                    <div class="product-info">
+                        <p>$32</p>
+                        <button class="add-btn" data-id="5" data-price="32">Add</button>
+                    </div>
+                </div>
+
+                <div class="product-card">
+                    <img src="C:\Users\moyou\Desktop\ClothesShopFrontend\img/leagues3.jpeg" alt="League 3">
+                    <div class="product-info">
+                        <p>$52</p>
+                        <button class="add-btn" data-id="6" data-price="52">Add</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+
+    <script>
+        const addButtons = document.querySelectorAll('.add-btn');
+
+        addButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+
+                const productID = btn.getAttribute('data-id');
+                const price = btn.getAttribute('data-price');
+
+                const orderData = {
+                    CustomerID: 1, 
+                    ProductID: Number(productID), 
+                    Quantity: 1,
+                    Price: Number(price)
+                };
+
+                fetch('http://10.51.211.79:5000/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.OrderID) {
+                        alert('Order added! OrderID: ' + data.OrderID);
+                    } else {
+                        alert('Failed to add order!');
+                    }
+                })
+                .catch(err => console.error('Error:', err));
+            });
+        });
+    </script>
+</body>
+</html>
